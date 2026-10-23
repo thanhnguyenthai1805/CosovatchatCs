@@ -56,3 +56,4 @@ D:\QuanLyCoSoVatChat\QuanLyCoSoVatChat\bin\Debug\net10.0-windows\runtimes\win-x8
 D:\QuanLyCoSoVatChat\QuanLyCoSoVatChat\obj\Debug\net10.0-windows\QuanLyCoSoVatChat.csproj.AssemblyReference.cache
 D:\QuanLyCoSoVatChat\QuanLyCoSoVatChat\obj\Debug\net10.0-windows\QuanLyCoSoVatChat.LoaiCoSoVatChat.resources
 D:\QuanLyCoSoVatChat\QuanLyCoSoVatChat\obj\Debug\net10.0-windows\QuanLyCoSoVatChat.FrmDangnhap.resources
+D:\QuanLyCoSoVatChat\QuanLyCoSoVatChat\obj\Debug\net10.0-windows\QuanLyCoSoVatChat.sourcelink.json

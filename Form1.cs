@@ -456,12 +456,22 @@ namespace QuanLyCoSoVatChat
         private void timkiem()
         {
             string sql = @"
-            select ma, ten,tenloai as loai,phongkhuvuc,soluong,tinhtrang,ngaynhap,ghichu
-            from cosovatchat
-            where ten like @tukhoa or
-                    loai like @tukhoa or
-                    phongkhuvuc like @tukhoa
-             order by ma asc
+        SELECT
+            c.Ma,
+            c.Ten,
+            l.TenLoai AS Loai,
+            c.PhongKhuVuc,
+            c.SoLuong,
+            c.TinhTrang,
+            c.NgayNhap,
+            c.GhiChu
+        FROM cosovatchat c
+        INNER JOIN LoaiCoSoVatChat l
+            ON c.MaLoai = l.MaLoai
+        WHERE c.Ten LIKE @TuKhoa
+           OR l.TenLoai LIKE @TuKhoa
+           OR c.PhongKhuVuc LIKE @TuKhoa
+        ORDER BY c.Ma ASC;
 ";
             try
             {
