@@ -74,6 +74,7 @@
             txtTendangnhap.Name = "txtTendangnhap";
             txtTendangnhap.Size = new Size(339, 34);
             txtTendangnhap.TabIndex = 3;
+            txtTendangnhap.TextChanged += txtTendangnhap_TextChanged;
             // 
             // txtMatkhau
             // 

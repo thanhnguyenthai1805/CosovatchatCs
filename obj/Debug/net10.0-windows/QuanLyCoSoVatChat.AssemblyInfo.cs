@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuanLyCoSoVatChat")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fd8a11d995ee249dc89ef66a1bbb8e3474a3acca")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+71561f0422290a98e54c3af90d7e512f09ad5a1c")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuanLyCoSoVatChat")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuanLyCoSoVatChat")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

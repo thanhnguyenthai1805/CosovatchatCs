@@ -27,7 +27,7 @@ namespace QuanLyCoSoVatChat
                 MessageBox.Show("Nhập đầy đủ tài khoản và mật khẩu");
                 return;
             }
-            string sql = @"select count(*) from taikhoan where tendangnhap =@tendangnhap and matkhau =@matkhau";
+            string sql = @"select vaitro from taikhoan where tendangnhap =@tendangnhap and matkhau =@matkhau";
             try
             {
                 using (SqlConnection conn = DatabaseConnection.GetConnection())
@@ -40,35 +40,58 @@ namespace QuanLyCoSoVatChat
                     {
                         cmd.Parameters.Add("@tendangnhap", SqlDbType.NVarChar, 50).Value = tendangnhap;
                         cmd.Parameters.Add("@MatKhau", SqlDbType.NVarChar, 100).Value = matkhau;
-                        int ketqua = Convert.ToInt32(cmd.ExecuteScalar());
-                        if (ketqua > 0)
+                        object ketqua = cmd.ExecuteScalar();
+                        if (ketqua != null && ketqua != DBNull.Value)
                         {
+                            string vaiTro = ketqua.ToString();
+
+                            // Chỉ chấp nhận hai loại quyền hợp lệ
+                            if (vaiTro != "Admin" && vaiTro != "User")
+                            {
+                                MessageBox.Show("Quyền tài khoản không hợp lệ!");
+                                return;
+                            }
+
                             MessageBox.Show("Đăng nhập thành công!");
 
+                            // 3. Ẩn Form đăng nhập
                             this.Hide();
-                            Form1 f = new Form1();
-                            f.ShowDialog();
+
+                            // 4. Mở Form chính và truyền quyền
+                            using (Form1 f = new Form1(vaiTro))
+                            {
+                                f.ShowDialog();
+                            }
+
+                            // 5. Khi Form chính đóng, hiện lại Form đăng nhập
                             this.Show();
                             txtMatkhau.Clear();
+                            txtTendangnhap.Focus();
                         }
                         else
                         {
-                            MessageBox.Show("Sai tên đăng nhập hoặc mật khẩu");
+                            MessageBox.Show("Sai tên đăng nhập hoặc mật khẩu!");
+
                             txtMatkhau.Clear();
-                            txtTendangnhap.Clear();
+                            txtMatkhau.Focus();
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi " + ex.Message);
+                MessageBox.Show("Lỗi đăng nhập: " + ex.Message);
             }
         }
 
         private void btnThoatdangnhap_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void txtTendangnhap_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

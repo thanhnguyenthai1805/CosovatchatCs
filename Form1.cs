@@ -11,13 +11,39 @@ namespace QuanLyCoSoVatChat
         }
         private int tim = 0;
         private string chon = "";
-        public Form1()
+        private string vaiTro;
+        public Form1(string vaitrodangnhap)
         {   
 
             InitializeComponent();
+            vaiTro = vaitrodangnhap;
             loadLoai();
             loadData();
+            phanquyen();
             onOff(false);
+        }
+        private void phanquyen()
+        {
+            bool laAddmin = vaiTro == "Admin";
+            btnThem.Visible= laAddmin;
+            btnCapnhat.Visible= laAddmin;
+            btnXoa.Visible= laAddmin;
+            btnLuu.Visible= laAddmin;
+            btnLamtrong.Visible= laAddmin;
+            btnThoat.Visible= laAddmin;
+            
+            btnTimkiem.Visible= true;
+            btnLoadtable.Visible= true;
+
+            txtTen.ReadOnly = !laAddmin;
+            txtPhong.ReadOnly = !laAddmin;
+            txtSoluong.ReadOnly = !laAddmin;
+            txtNgaynhap.ReadOnly = !laAddmin;
+            txtGhichu.ReadOnly = !laAddmin;
+
+            
+
+            this.Text = laAddmin ? "Quản lý cơ sở vật chất -Admin " : "Quản lý cơ sở vật chất - User";
         }
         private void clearForm()
         {

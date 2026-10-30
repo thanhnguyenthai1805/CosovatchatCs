@@ -15,6 +15,8 @@ VALUES
 ('LOAI002', N'Bàn ghế'),
 ('LOAI003', N'Thiết bị phòng học'),
 ('LOAI004', N'Thiết bị thể thao');
+DELETE FROM LoaiCoSoVatChat;
+select * from LoaiCoSoVatChat
 create table cosovatchat(
 	ma VARCHAR(30)  primary key,
 	ten nvarchar(200) not null,
@@ -75,12 +77,15 @@ VALUES
 (
     MaTaiKhoan INT IDENTITY(1,1) PRIMARY KEY,
     TenDangNhap NVARCHAR(50) NOT NULL UNIQUE,
-    MatKhau NVARCHAR(100) NOT NULL
+    MatKhau NVARCHAR(255) NOT NULL,
+    VaiTro NVARCHAR(20) NOT NULL
+        CHECK (VaiTro IN ('Admin', 'User'))
 );
 GO
 
-INSERT INTO TaiKhoan (TenDangNhap, MatKhau)
+INSERT INTO TaiKhoan (TenDangNhap, MatKhau, VaiTro)
 VALUES
-(N'thanh', N'123456'),
-(N'admin', N'admin123');
+    (N'admin', N'12345', N'Admin'),
+    (N'user', N'12345', N'User');
 GO
+drop table taikhoan
