@@ -12,11 +12,14 @@ namespace QuanLyCoSoVatChat
         private int tim = 0;
         private string chon = "";
         private string vaiTro;
-        public Form1(string vaitrodangnhap)
-        {   
+        private string vaitrodangnhaptk;
+        public Form1(string vaitrodangnhap, string tendangnhap)
+        {
 
             InitializeComponent();
             vaiTro = vaitrodangnhap;
+            vaitrodangnhaptk = tendangnhap;
+            txtMa.ReadOnly = true;
             loadLoai();
             loadData();
             phanquyen();
@@ -25,15 +28,15 @@ namespace QuanLyCoSoVatChat
         private void phanquyen()
         {
             bool laAddmin = vaiTro == "Admin";
-            btnThem.Visible= laAddmin;
-            btnCapnhat.Visible= laAddmin;
-            btnXoa.Visible= laAddmin;
-            btnLuu.Visible= laAddmin;
-            btnLamtrong.Visible= laAddmin;
-            btnThoat.Visible= laAddmin;
-            
-            btnTimkiem.Visible= true;
-            btnLoadtable.Visible= true;
+            btnThem.Visible = laAddmin;
+            btnCapnhat.Visible = laAddmin;
+            btnXoa.Visible = laAddmin;
+            btnLuu.Visible = laAddmin;
+            btnLamtrong.Visible = laAddmin;
+            btnThoat.Visible = laAddmin;
+
+            btnTimkiem.Visible = true;
+            btnLoadtable.Visible = true;
 
             txtTen.ReadOnly = !laAddmin;
             txtPhong.ReadOnly = !laAddmin;
@@ -41,7 +44,7 @@ namespace QuanLyCoSoVatChat
             txtNgaynhap.ReadOnly = !laAddmin;
             txtGhichu.ReadOnly = !laAddmin;
 
-            
+
 
             this.Text = laAddmin ? "Quản lý cơ sở vật chất -Admin " : "Quản lý cơ sở vật chất - User";
         }
@@ -201,7 +204,7 @@ namespace QuanLyCoSoVatChat
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            
+
             clearForm();
             onOff(true);
             tim = 1;
@@ -353,9 +356,9 @@ namespace QuanLyCoSoVatChat
             }
 
             // 8. Câu SQL: dùng MaLoai thay cho Loai
-           
+
             string ma = "";
-            
+
 
             if (tim == 1)
             {
@@ -376,7 +379,7 @@ namespace QuanLyCoSoVatChat
             VALUES
                 (@ma,@Ten, @MaLoai, @PhongKhuVuc, @SoLuong,
                  @TinhTrang, @NgayNhap, @GhiChu)";
-                
+
             }
             else
             {
@@ -390,7 +393,7 @@ namespace QuanLyCoSoVatChat
                 NgayNhap = @NgayNhap,
                 GhiChu = @GhiChu
             WHERE Ma = @Ma";
-               
+
             }
 
             try
@@ -555,6 +558,20 @@ namespace QuanLyCoSoVatChat
         private void label13_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnnewuser_Click(object sender, EventArgs e)
+        {
+            if (vaiTro != "Admin")
+            {
+                MessageBox.Show("Bạn không có quyền quản lý tài khoản!");
+                return;
+            }
+
+            using (FrmTaikhoan f = new FrmTaikhoan(vaiTro,vaitrodangnhaptk))
+            {
+                f.ShowDialog();
+            }
         }
     }
 

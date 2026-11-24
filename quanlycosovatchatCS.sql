@@ -83,9 +83,17 @@ VALUES
 );
 GO
 
+    CREATE TABLE TaiKhoan_csvc
+(
+    MaTaiKhoan VARCHAR(10) PRIMARY KEY,
+    TenDangNhap NVARCHAR(50) NOT NULL UNIQUE,
+    MatKhau NVARCHAR(255) NOT NULL,
+    VaiTro NVARCHAR(20) NOT NULL
+        CHECK (VaiTro IN ('Admin', 'User')),
+    NgayTao DATETIME NOT NULL DEFAULT GETDATE()
+);
+
 INSERT INTO TaiKhoan (TenDangNhap, MatKhau, VaiTro)
 VALUES
     (N'admin', N'12345', N'Admin'),
     (N'user', N'12345', N'User');
-GO
-drop table taikhoan

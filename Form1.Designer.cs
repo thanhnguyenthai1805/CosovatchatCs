@@ -100,6 +100,7 @@ namespace QuanLyCoSoVatChat
             components = new System.ComponentModel.Container();
             label1 = new Label();
             panel1 = new Panel();
+            btnnewuser = new Button();
             label12 = new Label();
             panel2 = new Panel();
             dgvCosovatchat = new DataGridView();
@@ -142,6 +143,10 @@ namespace QuanLyCoSoVatChat
             btnTimkiem = new Button();
             btnLoadtable = new Button();
             contextMenuStrip1 = new ContextMenuStrip(components);
+            notifyIcon1 = new NotifyIcon(components);
+            notifyIcon2 = new NotifyIcon(components);
+            notifyIcon3 = new NotifyIcon(components);
+            imageList1 = new ImageList(components);
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvCosovatchat).BeginInit();
@@ -162,6 +167,7 @@ namespace QuanLyCoSoVatChat
             // panel1
             // 
             panel1.BackColor = SystemColors.ActiveCaption;
+            panel1.Controls.Add(btnnewuser);
             panel1.Controls.Add(label12);
             panel1.Controls.Add(label1);
             panel1.ForeColor = SystemColors.ButtonHighlight;
@@ -169,6 +175,19 @@ namespace QuanLyCoSoVatChat
             panel1.Name = "panel1";
             panel1.Size = new Size(1222, 125);
             panel1.TabIndex = 1;
+            // 
+            // btnnewuser
+            // 
+            btnnewuser.BackColor = SystemColors.ButtonHighlight;
+            btnnewuser.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnnewuser.ForeColor = SystemColors.ActiveCaptionText;
+            btnnewuser.Location = new Point(1025, 27);
+            btnnewuser.Name = "btnnewuser";
+            btnnewuser.Size = new Size(183, 52);
+            btnnewuser.TabIndex = 3;
+            btnnewuser.Text = "Quản lý tài khoản";
+            btnnewuser.UseVisualStyleBackColor = false;
+            btnnewuser.Click += btnnewuser_Click;
             // 
             // label12
             // 
@@ -352,7 +371,7 @@ namespace QuanLyCoSoVatChat
             // 
             // btnCapnhat
             // 
-            btnCapnhat.Location = new Point(169, 437);
+            btnCapnhat.Location = new Point(144, 438);
             btnCapnhat.Name = "btnCapnhat";
             btnCapnhat.Size = new Size(94, 29);
             btnCapnhat.TabIndex = 26;
@@ -362,7 +381,7 @@ namespace QuanLyCoSoVatChat
             // 
             // btnXoa
             // 
-            btnXoa.Location = new Point(291, 437);
+            btnXoa.Location = new Point(266, 438);
             btnXoa.Name = "btnXoa";
             btnXoa.Size = new Size(94, 29);
             btnXoa.TabIndex = 25;
@@ -372,7 +391,7 @@ namespace QuanLyCoSoVatChat
             // 
             // btnLuu
             // 
-            btnLuu.Location = new Point(41, 482);
+            btnLuu.Location = new Point(16, 483);
             btnLuu.Name = "btnLuu";
             btnLuu.Size = new Size(94, 29);
             btnLuu.TabIndex = 24;
@@ -382,7 +401,7 @@ namespace QuanLyCoSoVatChat
             // 
             // btnThoat
             // 
-            btnThoat.Location = new Point(169, 482);
+            btnThoat.Location = new Point(144, 483);
             btnThoat.Name = "btnThoat";
             btnThoat.Size = new Size(94, 29);
             btnThoat.TabIndex = 23;
@@ -392,7 +411,7 @@ namespace QuanLyCoSoVatChat
             // 
             // btnLamtrong
             // 
-            btnLamtrong.Location = new Point(291, 482);
+            btnLamtrong.Location = new Point(266, 483);
             btnLamtrong.Name = "btnLamtrong";
             btnLamtrong.Size = new Size(94, 29);
             btnLamtrong.TabIndex = 22;
@@ -402,7 +421,7 @@ namespace QuanLyCoSoVatChat
             // 
             // btnThem
             // 
-            btnThem.Location = new Point(41, 437);
+            btnThem.Location = new Point(16, 438);
             btnThem.Name = "btnThem";
             btnThem.Size = new Size(94, 29);
             btnThem.TabIndex = 21;
@@ -596,6 +615,27 @@ namespace QuanLyCoSoVatChat
             contextMenuStrip1.Name = "contextMenuStrip1";
             contextMenuStrip1.Size = new Size(61, 4);
             // 
+            // notifyIcon1
+            // 
+            notifyIcon1.Text = "notifyIcon1";
+            notifyIcon1.Visible = true;
+            // 
+            // notifyIcon2
+            // 
+            notifyIcon2.Text = "notifyIcon2";
+            notifyIcon2.Visible = true;
+            // 
+            // notifyIcon3
+            // 
+            notifyIcon3.Text = "notifyIcon3";
+            notifyIcon3.Visible = true;
+            // 
+            // imageList1
+            // 
+            imageList1.ColorDepth = ColorDepth.Depth32Bit;
+            imageList1.ImageSize = new Size(16, 16);
+            imageList1.TransparentColor = Color.Transparent;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -669,5 +709,10 @@ namespace QuanLyCoSoVatChat
         private Label label13;
         private TextBox txtMa;
         private ContextMenuStrip contextMenuStrip1;
+        private Button btnnewuser;
+        private NotifyIcon notifyIcon1;
+        private NotifyIcon notifyIcon2;
+        private NotifyIcon notifyIcon3;
+        private ImageList imageList1;
     }
 }

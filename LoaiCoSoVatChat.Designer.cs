@@ -16,7 +16,10 @@ namespace QuanLyCoSoVatChat
         }
         private void loadLoai()
         {
-            string sql = @"select maloai,tenloai from loaicosovatchat order by tenloai";
+            string sql = @"
+    SELECT MaLoai, TenLoai
+    FROM LoaiCoSoVatChat
+    ORDER BY TRY_CONVERT(INT, SUBSTRING(MaLoai, 5, 10)) ASC";
             try
             {
                 using (SqlConnection conn = DatabaseConnection.GetConnection())

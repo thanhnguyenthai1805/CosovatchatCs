@@ -11,9 +11,22 @@ namespace QuanLyCoSoVatChat
 {
     public partial class LoaiCoSoVatChat : Form
     {
-        private string TaoMaLoai()
+        private string TaoMaLoai(SqlConnection conn)
         {
-            return "LOAI" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            string sql = @"
+        SELECT ISNULL(
+            MAX(TRY_CONVERT(INT, SUBSTRING(MaLoai, 5, 10))),
+            0
+        ) + 1
+        FROM LoaiCoSoVatChat
+        WHERE MaLoai LIKE 'LOAI%'";
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                int so = Convert.ToInt32(cmd.ExecuteScalar());
+
+                return "LOAI" + so.ToString("D3");
+            }
         }
         private int trangthai = 0;
         private string machon = "";
@@ -21,7 +34,7 @@ namespace QuanLyCoSoVatChat
         {
             InitializeComponent();
             loadLoai();
-
+            txtMaloai.ReadOnly=true;
             onOff(true);
         }
 
@@ -106,7 +119,7 @@ namespace QuanLyCoSoVatChat
         {
             string tenLoai = txtTenloai.Text.Trim();
 
-            // 1. Kiểm tra dữ liệu
+            // 1. Kiểm tra tên loại
             if (string.IsNullOrWhiteSpace(tenLoai))
             {
                 MessageBox.Show("Vui lòng nhập tên loại!");
@@ -114,27 +127,11 @@ namespace QuanLyCoSoVatChat
                 return;
             }
 
+            // 2. Kiểm tra trạng thái
             if (trangthai != 1 && trangthai != -1)
             {
                 MessageBox.Show("Vui lòng nhấn Thêm hoặc Cập nhật trước!");
                 return;
-            }
-
-            // 2. Chọn câu SQL theo chế độ
-            string sql;
-
-            if (trangthai == 1)
-            {
-                sql = @"
-            INSERT INTO LoaiCoSoVatChat (TenLoai)
-            VALUES (@TenLoai)";
-            }
-            else
-            {
-                sql = @"
-            UPDATE LoaiCoSoVatChat
-            SET TenLoai = @TenLoai
-            WHERE MaLoai = @MaLoai";
             }
 
             try
@@ -144,40 +141,71 @@ namespace QuanLyCoSoVatChat
                     if (conn.State == ConnectionState.Closed)
                         conn.Open();
 
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    string sql = "";
+
+                    // 3. Nếu đang thêm mới
+                    if (trangthai == 1)
                     {
-                        cmd.Parameters.Add("@TenLoai", SqlDbType.NVarChar, 100)
-                            .Value = tenLoai;
+                        // Tự tạo mã loại
+                        string maLoai = TaoMaLoai(conn);
 
-                        if (trangthai == -1)
+                        sql = @"
+                    INSERT INTO LoaiCoSoVatChat (MaLoai, TenLoai)
+                    VALUES (@MaLoai, @TenLoai)";
+
+                        using (SqlCommand cmd = new SqlCommand(sql, conn))
                         {
-                            cmd.Parameters.Add("@MaLoai", SqlDbType.Int)
-                                .Value = Convert.ToInt32(txtMaloai.Text);
-                        }
+                            cmd.Parameters.Add("@MaLoai", SqlDbType.VarChar, 30)
+                                .Value = maLoai;
 
-                        int ketQua = cmd.ExecuteNonQuery();
+                            cmd.Parameters.Add("@TenLoai", SqlDbType.NVarChar, 100)
+                                .Value = tenLoai;
 
-                        if (ketQua > 0)
-                        {
-                            MessageBox.Show(
-                                trangthai == 1
-                                    ? "Thêm loại thành công!"
-                                    : "Cập nhật loại thành công!");
+                            int ketQua = cmd.ExecuteNonQuery();
 
-                            trangthai = 0;
-                            loadLoai();
-                            lamtrong();
-                            onOff(true);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Không có dữ liệu nào được thay đổi!");
+                            if (ketQua > 0)
+                            {
+                                MessageBox.Show("Thêm loại thành công!");
+                            }
                         }
                     }
+                    // 4. Nếu đang cập nhật
+                    else if (trangthai == -1)
+                    {
+                        sql = @"
+                    UPDATE LoaiCoSoVatChat
+                    SET TenLoai = @TenLoai
+                    WHERE MaLoai = @MaLoai";
+
+                        using (SqlCommand cmd = new SqlCommand(sql, conn))
+                        {
+                            cmd.Parameters.Add("@TenLoai", SqlDbType.NVarChar, 100)
+                                .Value = tenLoai;
+
+                            cmd.Parameters.Add("@MaLoai", SqlDbType.VarChar, 30)
+                                .Value = txtMaloai.Text.Trim();
+
+                            int ketQua = cmd.ExecuteNonQuery();
+
+                            if (ketQua > 0)
+                            {
+                                MessageBox.Show("Cập nhật loại thành công!");
+                            }
+                            else
+                            {
+                                MessageBox.Show("Không tìm thấy loại cần cập nhật!");
+                                return;
+                            }
+                        }
+                    }
+
+                    // 5. Tải lại dữ liệu sau khi lưu
+                    trangthai = 0;
+                    loadLoai();
+                    lamtrong();
+                    onOff(true);
                 }
             }
-            //2601: thường liên quan đến việc chèn giá trị trùng vào chỉ mục duy nhất.
-            //2627: vi phạm ràng buộc PRIMARY KEY hoặc UNIQUE.
             catch (SqlException ex)
             {
                 if (ex.Number == 2601 || ex.Number == 2627)
@@ -276,8 +304,10 @@ namespace QuanLyCoSoVatChat
 
         private void btnLamtrong_Click(object sender, EventArgs e)
         {
-            txtMaloai.Clear();
-            txtTenloai.Clear();
+            lamtrong();
+
+            trangthai = 0;
+            onOff(true);
         }
     }
 }
