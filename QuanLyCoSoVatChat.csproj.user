@@ -13,5 +13,8 @@
     <Compile Update="LoaiCoSoVatChat.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Themexcel.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

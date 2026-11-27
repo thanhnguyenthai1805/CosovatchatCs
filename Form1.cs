@@ -1,6 +1,9 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
-
+using ExcelDataReader;
+using System.Data;
+using System.IO;
+using System.Text;
 namespace QuanLyCoSoVatChat
 {
     public partial class Form1 : Form
@@ -20,6 +23,7 @@ namespace QuanLyCoSoVatChat
             vaiTro = vaitrodangnhap;
             vaitrodangnhaptk = tendangnhap;
             txtMa.ReadOnly = true;
+            txtNgaynhap.ReadOnly = true;
             loadLoai();
             loadData();
             phanquyen();
@@ -34,6 +38,7 @@ namespace QuanLyCoSoVatChat
             btnLuu.Visible = laAddmin;
             btnLamtrong.Visible = laAddmin;
             btnThoat.Visible = laAddmin;
+            btnNhapexcel.Visible = laAddmin;
 
             btnTimkiem.Visible = true;
             btnLoadtable.Visible = true;
@@ -43,9 +48,6 @@ namespace QuanLyCoSoVatChat
             txtSoluong.ReadOnly = !laAddmin;
             txtNgaynhap.ReadOnly = !laAddmin;
             txtGhichu.ReadOnly = !laAddmin;
-
-
-
             this.Text = laAddmin ? "Quản lý cơ sở vật chất -Admin " : "Quản lý cơ sở vật chất - User";
         }
         private void clearForm()
@@ -90,6 +92,84 @@ namespace QuanLyCoSoVatChat
                     return dem > 0;
                 }
             }
+        }
+        private HashSet<string> LayDanhSachLoai()
+        {
+            HashSet<string> danhSach = new HashSet<string>(
+                StringComparer.OrdinalIgnoreCase
+            );
+
+            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            {
+                conn.Open();
+
+                string sql = "SELECT TenLoai FROM LoaiCoSoVatChat";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        danhSach.Add(reader["TenLoai"].ToString().Trim());
+                    }
+                }
+            }
+
+            return danhSach;
+        }
+        private HashSet<string> LayDanhSachTinhTrang()
+        {
+            HashSet<string> danhSach = new HashSet<string>(
+                StringComparer.OrdinalIgnoreCase
+            );
+
+            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            {
+                conn.Open();
+
+                string sql = "SELECT TenTinhTrang FROM TinhTrangCoSoVatChat";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        danhSach.Add(reader["TenTinhTrang"].ToString().Trim());
+                    }
+                }
+            }
+
+            return danhSach;
+        }
+        private List<string> KiemTraDuLieuExcel(
+    DataRow row,
+    HashSet<string> danhSachLoai,
+    HashSet<string> danhSachTinhTrang)
+        {
+            List<string> loi = new List<string>();
+
+            string ten = row["Ten"]?.ToString().Trim() ?? "";
+            string loai = row["Loai"]?.ToString().Trim() ?? "";
+            string phong = row["PhongKhuVuc"]?.ToString().Trim() ?? "";
+            string tinhTrang = row["TinhTrang"]?.ToString().Trim() ?? "";
+            string soLuongText = row["SoLuong"]?.ToString().Trim() ?? "";
+
+            if (string.IsNullOrWhiteSpace(ten))
+                loi.Add("Tên không được để trống");
+
+            if (!danhSachLoai.Contains(loai))
+                loi.Add("Loại không tồn tại trong SQL");
+
+            if (string.IsNullOrWhiteSpace(phong))
+                loi.Add("Phòng/Khu vực không được để trống");
+
+            if (!int.TryParse(soLuongText, out int soLuong) || soLuong < 0)
+                loi.Add("Số lượng phải là số nguyên không âm");
+
+            if (!danhSachTinhTrang.Contains(tinhTrang))
+                loi.Add("Tình trạng không tồn tại trong SQL");
+
+            return loi;
         }
         private void label1_Click(object sender, EventArgs e)
         {
@@ -205,10 +285,11 @@ namespace QuanLyCoSoVatChat
         private void btnThem_Click(object sender, EventArgs e)
         {
 
+            txtNgaynhap.Text = DateTime.Today.ToString("yyyy-MM-dd");
             clearForm();
             onOff(true);
             tim = 1;
-
+            txtNgaynhap.ReadOnly = true;
             txtTen.Focus();
         }
 
@@ -228,18 +309,16 @@ namespace QuanLyCoSoVatChat
             txtPhong.Text = row.Cells["colPhong"].Value?.ToString() ?? "";
             txtSoluong.Text = row.Cells["colSoluong"].Value?.ToString() ?? "";
             cboTinhtrang.Text = row.Cells["colTinhtrang"].Value?.ToString() ?? "";
-
-            object giaTriNgay = row.Cells["colNgaynhap"].Value;
-
-            if (giaTriNgay != null && giaTriNgay != DBNull.Value)
+            if (row.Cells["colNgaynhap"].Value != null &&
+                row.Cells["colNgaynhap"].Value != DBNull.Value)
             {
-                txtNgaynhap.Text =
-                    Convert.ToDateTime(giaTriNgay).ToString("yyyy-MM-dd");
+                txtNgaynhap.Text = Convert.ToDateTime(row.Cells["colNgaynhap"].Value).ToString("yyyy-MM-dd");
             }
             else
             {
                 txtNgaynhap.Clear();
             }
+
             txtGhichu.Text = dgvCosovatchat.CurrentRow.Cells["colghichu"].Value?.ToString();
             tim = -1;
             MessageBox.Show("Đã chọn dữ liệu hãy sửa thông tin rồi ấn lưu");
@@ -321,25 +400,32 @@ namespace QuanLyCoSoVatChat
             }
 
             // 6. Kiểm tra ngày nhập
-            DateTime? ngayNhap = null;
+            DateTime ngayNhap;
 
-            if (!string.IsNullOrWhiteSpace(txtNgaynhap.Text))
+            // Nếu đang thêm mới: tự động lấy ngày hiện tại
+            if (tim == 1)
+            {
+                ngayNhap = DateTime.Today;
+                txtNgaynhap.Text = ngayNhap.ToString("yyyy-MM-dd");
+            }
+            // Nếu đang cập nhật: giữ ngày nhập đang hiển thị
+            else
             {
                 if (!DateTime.TryParseExact(
                     txtNgaynhap.Text.Trim(),
                     "yyyy-MM-dd",
                     System.Globalization.CultureInfo.InvariantCulture,
                     System.Globalization.DateTimeStyles.None,
-                    out DateTime ngay))
+                    out ngayNhap))
                 {
-                    MessageBox.Show(
-                        "Ngày không hợp lệ! Vui lòng nhập theo dạng yyyy-MM-dd.");
-                    txtNgaynhap.Focus();
+                    MessageBox.Show("Ngày nhập không hợp lệ!");
                     return;
                 }
-
-                ngayNhap = ngay;
             }
+
+            txtNgaynhap.ReadOnly = true;
+
+
 
             // 7. Kiểm tra chế độ Thêm hoặc Cập nhật
             if (tim != 1 && tim != -1)
@@ -395,7 +481,6 @@ namespace QuanLyCoSoVatChat
             WHERE Ma = @Ma";
 
             }
-
             try
             {
                 using (SqlConnection conn = DatabaseConnection.GetConnection())
@@ -424,10 +509,7 @@ namespace QuanLyCoSoVatChat
                         cmd.Parameters.AddWithValue(
                             "@TinhTrang", cboTinhtrang.Text);
 
-                        cmd.Parameters.Add("@NgayNhap", SqlDbType.Date).Value =
-                            ngayNhap.HasValue
-                                ? (object)ngayNhap.Value.Date
-                                : DBNull.Value;
+                        cmd.Parameters.Add("@NgayNhap", SqlDbType.Date).Value = ngayNhap.Date;
 
                         cmd.Parameters.AddWithValue(
                             "@GhiChu",
@@ -548,10 +630,18 @@ namespace QuanLyCoSoVatChat
 
         private void btnThemloai_Click(object sender, EventArgs e)
         {
+            if (vaiTro != "Admin")
+            {
+                MessageBox.Show("Bạn không có quyền quản lý loại!");
+                return;
+            }
+
             using (LoaiCoSoVatChat loaics = new LoaiCoSoVatChat())
             {
                 loaics.ShowDialog();
             }
+
+            // Tải lại danh sách loại sau khi đóng form
             loadLoai();
         }
 
@@ -568,9 +658,28 @@ namespace QuanLyCoSoVatChat
                 return;
             }
 
-            using (FrmTaikhoan f = new FrmTaikhoan(vaiTro,vaitrodangnhaptk))
+            using (FrmTaikhoan f = new FrmTaikhoan(vaiTro, vaitrodangnhaptk))
             {
                 f.ShowDialog();
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            using (Themexcel form = new Themexcel())
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    loadData();
+                    clearForm();
+
+                    MessageBox.Show("Bảng cơ sở vật chất đã được cập nhật!");
+                }
             }
         }
     }

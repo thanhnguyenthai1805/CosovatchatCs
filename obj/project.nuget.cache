@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "M4a5RSw3wmE=",
+  "dgSpecHash": "N+WIcnPkrR0=",
   "success": true,
   "projectFilePath": "D:\\QuanLyCoSoVatChat\\QuanLyCoSoVatChat\\QuanLyCoSoVatChat.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Admin\\.nuget\\packages\\exceldatareader\\3.9.0\\exceldatareader.3.9.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\exceldatareader.dataset\\3.9.0\\exceldatareader.dataset.3.9.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.bcl.cryptography\\9.0.18\\microsoft.bcl.cryptography.9.0.18.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.data.sqlclient\\7.1.1\\microsoft.data.sqlclient.7.1.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.data.sqlclient.extensions.abstractions\\7.1.1\\microsoft.data.sqlclient.extensions.abstractions.7.1.1.nupkg.sha512",

@@ -113,6 +113,7 @@ namespace QuanLyCoSoVatChat
             ColNgaynhap = new DataGridViewTextBoxColumn();
             ColGhichu = new DataGridViewTextBoxColumn();
             panel3 = new Panel();
+            btnNhapexcel = new Button();
             txtMa = new TextBox();
             label13 = new Label();
             btnThemloai = new Button();
@@ -147,6 +148,7 @@ namespace QuanLyCoSoVatChat
             notifyIcon2 = new NotifyIcon(components);
             notifyIcon3 = new NotifyIcon(components);
             imageList1 = new ImageList(components);
+            sqlDataAdapter1 = new SqlDataAdapter();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvCosovatchat).BeginInit();
@@ -156,10 +158,10 @@ namespace QuanLyCoSoVatChat
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 25.8000011F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Font = new Font("Arial Rounded MT Bold", 25.8000011F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label1.Location = new Point(3, 19);
             label1.Name = "label1";
-            label1.Size = new Size(828, 60);
+            label1.Size = new Size(842, 51);
             label1.TabIndex = 0;
             label1.Text = "HỆ THỐNG QUẢN LÝ CƠ SỞ VẬT CHẤT";
             label1.Click += label1_Click;
@@ -173,17 +175,17 @@ namespace QuanLyCoSoVatChat
             panel1.ForeColor = SystemColors.ButtonHighlight;
             panel1.Location = new Point(12, 9);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1222, 125);
+            panel1.Size = new Size(1322, 125);
             panel1.TabIndex = 1;
             // 
             // btnnewuser
             // 
             btnnewuser.BackColor = SystemColors.ButtonHighlight;
-            btnnewuser.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnnewuser.Font = new Font("Arial", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnnewuser.ForeColor = SystemColors.ActiveCaptionText;
-            btnnewuser.Location = new Point(1025, 27);
+            btnnewuser.Location = new Point(1025, 25);
             btnnewuser.Name = "btnnewuser";
-            btnnewuser.Size = new Size(183, 52);
+            btnnewuser.Size = new Size(265, 63);
             btnnewuser.TabIndex = 3;
             btnnewuser.Text = "Quản lý tài khoản";
             btnnewuser.UseVisualStyleBackColor = false;
@@ -192,10 +194,10 @@ namespace QuanLyCoSoVatChat
             // label12
             // 
             label12.AutoSize = true;
-            label12.Font = new Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label12.Font = new Font("Arial Rounded MT Bold", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label12.Location = new Point(14, 79);
             label12.Name = "label12";
-            label12.Size = new Size(556, 31);
+            label12.Size = new Size(685, 32);
             label12.TabIndex = 2;
             label12.Text = "Theo dõi phòng học, thiết bị và tình trạng sử dụng";
             // 
@@ -206,7 +208,7 @@ namespace QuanLyCoSoVatChat
             panel2.Controls.Add(dgvCosovatchat);
             panel2.Location = new Point(12, 245);
             panel2.Name = "panel2";
-            panel2.Size = new Size(692, 534);
+            panel2.Size = new Size(716, 583);
             panel2.TabIndex = 2;
             panel2.Paint += panel2_Paint;
             // 
@@ -231,7 +233,7 @@ namespace QuanLyCoSoVatChat
             dgvCosovatchat.RowHeadersVisible = false;
             dgvCosovatchat.RowHeadersWidth = 51;
             dgvCosovatchat.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvCosovatchat.Size = new Size(688, 530);
+            dgvCosovatchat.Size = new Size(712, 579);
             dgvCosovatchat.TabIndex = 1;
             dgvCosovatchat.CellClick += dgvCosovatchat_CellClick;
             dgvCosovatchat.CellContentClick += dgvCosovatchat_CellContentClick;
@@ -314,6 +316,7 @@ namespace QuanLyCoSoVatChat
             // 
             panel3.BackColor = SystemColors.ControlLight;
             panel3.BorderStyle = BorderStyle.Fixed3D;
+            panel3.Controls.Add(btnNhapexcel);
             panel3.Controls.Add(txtMa);
             panel3.Controls.Add(label13);
             panel3.Controls.Add(btnThemloai);
@@ -339,15 +342,26 @@ namespace QuanLyCoSoVatChat
             panel3.Controls.Add(label3);
             panel3.Location = new Point(734, 245);
             panel3.Name = "panel3";
-            panel3.Size = new Size(500, 534);
+            panel3.Size = new Size(600, 583);
             panel3.TabIndex = 3;
             panel3.Paint += panel3_Paint;
+            // 
+            // btnNhapexcel
+            // 
+            btnNhapexcel.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            btnNhapexcel.Location = new Point(426, 498);
+            btnNhapexcel.Name = "btnNhapexcel";
+            btnNhapexcel.Size = new Size(140, 46);
+            btnNhapexcel.TabIndex = 31;
+            btnNhapexcel.Text = "Thêm excel";
+            btnNhapexcel.UseVisualStyleBackColor = true;
+            btnNhapexcel.Click += button2_Click;
             // 
             // txtMa
             // 
             txtMa.Location = new Point(177, 21);
             txtMa.Name = "txtMa";
-            txtMa.Size = new Size(307, 27);
+            txtMa.Size = new Size(389, 27);
             txtMa.TabIndex = 29;
             // 
             // label13
@@ -361,19 +375,21 @@ namespace QuanLyCoSoVatChat
             // 
             // btnThemloai
             // 
-            btnThemloai.Location = new Point(452, 119);
+            btnThemloai.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnThemloai.Location = new Point(477, 118);
             btnThemloai.Name = "btnThemloai";
-            btnThemloai.Size = new Size(32, 28);
+            btnThemloai.Size = new Size(89, 28);
             btnThemloai.TabIndex = 27;
-            btnThemloai.Text = "+";
+            btnThemloai.Text = "Thêm loại";
             btnThemloai.UseVisualStyleBackColor = true;
             btnThemloai.Click += btnThemloai_Click;
             // 
             // btnCapnhat
             // 
-            btnCapnhat.Location = new Point(144, 438);
+            btnCapnhat.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            btnCapnhat.Location = new Point(177, 427);
             btnCapnhat.Name = "btnCapnhat";
-            btnCapnhat.Size = new Size(94, 29);
+            btnCapnhat.Size = new Size(116, 49);
             btnCapnhat.TabIndex = 26;
             btnCapnhat.Text = "Cập nhật";
             btnCapnhat.UseVisualStyleBackColor = true;
@@ -381,9 +397,10 @@ namespace QuanLyCoSoVatChat
             // 
             // btnXoa
             // 
-            btnXoa.Location = new Point(266, 438);
+            btnXoa.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            btnXoa.Location = new Point(301, 428);
             btnXoa.Name = "btnXoa";
-            btnXoa.Size = new Size(94, 29);
+            btnXoa.Size = new Size(118, 48);
             btnXoa.TabIndex = 25;
             btnXoa.Text = "Xóa";
             btnXoa.UseVisualStyleBackColor = true;
@@ -391,9 +408,10 @@ namespace QuanLyCoSoVatChat
             // 
             // btnLuu
             // 
-            btnLuu.Location = new Point(16, 483);
+            btnLuu.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            btnLuu.Location = new Point(49, 498);
             btnLuu.Name = "btnLuu";
-            btnLuu.Size = new Size(94, 29);
+            btnLuu.Size = new Size(122, 46);
             btnLuu.TabIndex = 24;
             btnLuu.Text = "Lưu";
             btnLuu.UseVisualStyleBackColor = true;
@@ -401,9 +419,10 @@ namespace QuanLyCoSoVatChat
             // 
             // btnThoat
             // 
-            btnThoat.Location = new Point(144, 483);
+            btnThoat.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            btnThoat.Location = new Point(177, 498);
             btnThoat.Name = "btnThoat";
-            btnThoat.Size = new Size(94, 29);
+            btnThoat.Size = new Size(116, 46);
             btnThoat.TabIndex = 23;
             btnThoat.Text = "Thoát";
             btnThoat.UseVisualStyleBackColor = true;
@@ -411,9 +430,10 @@ namespace QuanLyCoSoVatChat
             // 
             // btnLamtrong
             // 
-            btnLamtrong.Location = new Point(266, 483);
+            btnLamtrong.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            btnLamtrong.Location = new Point(426, 428);
             btnLamtrong.Name = "btnLamtrong";
-            btnLamtrong.Size = new Size(94, 29);
+            btnLamtrong.Size = new Size(140, 48);
             btnLamtrong.TabIndex = 22;
             btnLamtrong.Text = "Làm trống";
             btnLamtrong.UseVisualStyleBackColor = true;
@@ -421,11 +441,12 @@ namespace QuanLyCoSoVatChat
             // 
             // btnThem
             // 
-            btnThem.Location = new Point(16, 438);
+            btnThem.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            btnThem.Location = new Point(49, 429);
             btnThem.Name = "btnThem";
-            btnThem.Size = new Size(94, 29);
+            btnThem.Size = new Size(122, 48);
             btnThem.TabIndex = 21;
-            btnThem.Text = "Thêm";
+            btnThem.Text = "Thêm mới";
             btnThem.UseVisualStyleBackColor = true;
             btnThem.Click += btnThem_Click;
             // 
@@ -433,7 +454,7 @@ namespace QuanLyCoSoVatChat
             // 
             txtGhichu.Location = new Point(177, 375);
             txtGhichu.Name = "txtGhichu";
-            txtGhichu.Size = new Size(309, 27);
+            txtGhichu.Size = new Size(389, 27);
             txtGhichu.TabIndex = 20;
             // 
             // cboTinhtrang
@@ -443,7 +464,7 @@ namespace QuanLyCoSoVatChat
             cboTinhtrang.Items.AddRange(new object[] { "Đang sử dụng", "Cần sửa chữa", "Hỏng", "Thanh lý" });
             cboTinhtrang.Location = new Point(177, 272);
             cboTinhtrang.Name = "cboTinhtrang";
-            cboTinhtrang.Size = new Size(309, 28);
+            cboTinhtrang.Size = new Size(389, 28);
             cboTinhtrang.TabIndex = 16;
             // 
             // cboLoai
@@ -452,7 +473,7 @@ namespace QuanLyCoSoVatChat
             cboLoai.FormattingEnabled = true;
             cboLoai.Location = new Point(177, 119);
             cboLoai.Name = "cboLoai";
-            cboLoai.Size = new Size(275, 28);
+            cboLoai.Size = new Size(303, 28);
             cboLoai.TabIndex = 15;
             cboLoai.SelectedIndexChanged += cboPhong_SelectedIndexChanged;
             // 
@@ -460,28 +481,28 @@ namespace QuanLyCoSoVatChat
             // 
             txtPhong.Location = new Point(177, 166);
             txtPhong.Name = "txtPhong";
-            txtPhong.Size = new Size(309, 27);
+            txtPhong.Size = new Size(389, 27);
             txtPhong.TabIndex = 14;
             // 
             // txtNgaynhap
             // 
             txtNgaynhap.Location = new Point(177, 325);
             txtNgaynhap.Name = "txtNgaynhap";
-            txtNgaynhap.Size = new Size(309, 27);
+            txtNgaynhap.Size = new Size(389, 27);
             txtNgaynhap.TabIndex = 11;
             // 
             // txtSoluong
             // 
             txtSoluong.Location = new Point(177, 218);
             txtSoluong.Name = "txtSoluong";
-            txtSoluong.Size = new Size(309, 27);
+            txtSoluong.Size = new Size(389, 27);
             txtSoluong.TabIndex = 9;
             // 
             // txtTen
             // 
             txtTen.Location = new Point(177, 70);
             txtTen.Name = "txtTen";
-            txtTen.Size = new Size(309, 27);
+            txtTen.Size = new Size(389, 27);
             txtTen.TabIndex = 8;
             // 
             // label9
@@ -590,10 +611,10 @@ namespace QuanLyCoSoVatChat
             // 
             // btnTimkiem
             // 
-            btnTimkiem.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnTimkiem.Location = new Point(1037, 166);
+            btnTimkiem.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            btnTimkiem.Location = new Point(1037, 161);
             btnTimkiem.Name = "btnTimkiem";
-            btnTimkiem.Size = new Size(94, 29);
+            btnTimkiem.Size = new Size(121, 34);
             btnTimkiem.TabIndex = 6;
             btnTimkiem.Text = "Tìm kiếm";
             btnTimkiem.UseVisualStyleBackColor = true;
@@ -601,9 +622,10 @@ namespace QuanLyCoSoVatChat
             // 
             // btnLoadtable
             // 
-            btnLoadtable.Location = new Point(1140, 166);
+            btnLoadtable.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            btnLoadtable.Location = new Point(1164, 161);
             btnLoadtable.Name = "btnLoadtable";
-            btnLoadtable.Size = new Size(94, 29);
+            btnLoadtable.Size = new Size(138, 34);
             btnLoadtable.TabIndex = 7;
             btnLoadtable.Text = "Load table";
             btnLoadtable.UseVisualStyleBackColor = true;
@@ -640,7 +662,7 @@ namespace QuanLyCoSoVatChat
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1246, 813);
+            ClientSize = new Size(1346, 850);
             Controls.Add(btnLoadtable);
             Controls.Add(btnTimkiem);
             Controls.Add(txtTimkiem);
@@ -714,5 +736,7 @@ namespace QuanLyCoSoVatChat
         private NotifyIcon notifyIcon2;
         private NotifyIcon notifyIcon3;
         private ImageList imageList1;
+        private SqlDataAdapter sqlDataAdapter1;
+        private Button btnNhapexcel;
     }
 }

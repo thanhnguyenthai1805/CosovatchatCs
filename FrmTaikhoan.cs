@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace QuanLyCoSoVatChat
 {
@@ -39,6 +40,26 @@ namespace QuanLyCoSoVatChat
             loadTaikhoan();
             lamTrong();
             onOff(true);
+        }
+        private bool KiemTraMatKhau(string matKhau)
+        {
+            // Ít nhất 8 ký tự
+            if (matKhau.Length < 8)
+                return false;
+
+            // Có ít nhất 1 chữ hoa
+            if (!Regex.IsMatch(matKhau, "[A-Z]"))
+                return false;
+
+            // Có ít nhất 1 chữ số
+            if (!Regex.IsMatch(matKhau, "[0-9]"))
+                return false;
+
+            // Có ít nhất 1 ký tự đặc biệt
+            if (!Regex.IsMatch(matKhau, @"[^a-zA-Z0-9\s]"))
+                return false;
+
+            return true;
         }
         private string TaoMaTaiKhoan(SqlConnection conn)
         {
@@ -258,7 +279,22 @@ namespace QuanLyCoSoVatChat
             string tenDangNhap = txtTendangnhap.Text.Trim();
             string matKhau = txtMatkhau.Text;
             string vaiTro = cboVaitro.Text;
+            if (!KiemTraMatKhau(matKhau))
+            {
+                MessageBox.Show(
+                    "Mật khẩu không hợp lệ!\n\n" +
+                    "- Tối thiểu 8 ký tự.\n" +
+                    "- Có ít nhất 1 chữ hoa.\n" +
+                    "- Có ít nhất 1 chữ số.\n" +
+                    "- Có ít nhất 1 ký tự đặc biệt.",
+                    "Thông báo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
 
+                txtMatkhau.Focus();
+                return;
+            }
             // Kiểm tra tên đăng nhập
             if (string.IsNullOrWhiteSpace(tenDangNhap))
             {
@@ -422,8 +458,8 @@ namespace QuanLyCoSoVatChat
                 return;
 
             DataGridViewRow row = dgvTaikhoan.Rows[e.RowIndex];
+            maChon = row.Cells["colMaTaiKhoan"].Value?.ToString() ?? "";
 
-            
             txtMataikhoan.Text =
                 row.Cells["colMaTaiKhoan"].Value?.ToString() ?? "";
 
@@ -454,6 +490,11 @@ namespace QuanLyCoSoVatChat
         private void label9_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void BtnExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

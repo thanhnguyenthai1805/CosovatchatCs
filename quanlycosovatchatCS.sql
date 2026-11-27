@@ -15,21 +15,26 @@ VALUES
 ('LOAI002', N'Bàn ghế'),
 ('LOAI003', N'Thiết bị phòng học'),
 ('LOAI004', N'Thiết bị thể thao');
-DELETE FROM LoaiCoSoVatChat;
-select * from LoaiCoSoVatChat
-create table cosovatchat(
-	ma VARCHAR(30)  primary key,
-	ten nvarchar(200) not null,
-	maloai varchar(30) not null,
-	phongkhuvuc nvarchar(200),
-	soluong int not null default 0,
-	tinhtrang nvarchar(100),
-	ngaynhap date,
-	ghichu nvarchar(500),
-       CONSTRAINT FK_CoSoVatChat_LoaiCoSoVatChat
+
+
+CREATE TABLE CoSoVatChat (
+    Ma VARCHAR(30) PRIMARY KEY,
+    Ten NVARCHAR(200) NOT NULL,
+    MaLoai VARCHAR(30) NOT NULL,
+    PhongKhuVuc NVARCHAR(200),
+    SoLuong INT NOT NULL DEFAULT 0,
+    TinhTrang NVARCHAR(100),
+
+    NgayNhap DATE NOT NULL
+        CONSTRAINT DF_CoSoVatChat_NgayNhap
+        DEFAULT CAST(GETDATE() AS DATE),
+
+    GhiChu NVARCHAR(500),
+
+    CONSTRAINT FK_CoSoVatChat_LoaiCoSoVatChat
         FOREIGN KEY (MaLoai)
         REFERENCES LoaiCoSoVatChat(MaLoai)
-)
+);
 INSERT INTO CoSoVatChat
     (Ma, Ten, MaLoai, PhongKhuVuc, SoLuong,
      TinhTrang, NgayNhap, GhiChu)
@@ -72,18 +77,10 @@ VALUES
      from LoaiCoSoVatChat
      drop table cosovatchat
      drop table LoaiCoSoVatChat
-     DBCC CHECKIDENT ('CoSoVatChat', RESEED, 3);
-     CREATE TABLE TaiKhoan
-(
-    MaTaiKhoan INT IDENTITY(1,1) PRIMARY KEY,
-    TenDangNhap NVARCHAR(50) NOT NULL UNIQUE,
-    MatKhau NVARCHAR(255) NOT NULL,
-    VaiTro NVARCHAR(20) NOT NULL
-        CHECK (VaiTro IN ('Admin', 'User'))
-);
-GO
+     
+     
 
-    CREATE TABLE TaiKhoan_csvc
+    CREATE TABLE TaiKhoan
 (
     MaTaiKhoan VARCHAR(10) PRIMARY KEY,
     TenDangNhap NVARCHAR(50) NOT NULL UNIQUE,
@@ -97,3 +94,18 @@ INSERT INTO TaiKhoan (TenDangNhap, MatKhau, VaiTro)
 VALUES
     (N'admin', N'12345', N'Admin'),
     (N'user', N'12345', N'User');
+
+    CREATE TABLE TinhTrangCoSoVatChat
+(
+    MaTinhTrang VARCHAR(30) PRIMARY KEY,
+    TenTinhTrang NVARCHAR(100) NOT NULL UNIQUE
+);
+
+INSERT INTO TinhTrangCoSoVatChat (MaTinhTrang, TenTinhTrang)
+VALUES
+('TT001', N'Tốt'),
+('TT002', N'Hỏng'),
+('TT003', N'Đang sửa chữa'),
+('TT004', N'Thanh lý');
+
+

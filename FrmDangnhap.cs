@@ -58,7 +58,7 @@ namespace QuanLyCoSoVatChat
                             this.Hide();
 
                             // 4. Mở Form chính và truyền quyền
-                            using (Form1 f = new Form1(vaiTro,tendangnhap))
+                            using (Form1 f = new Form1(vaiTro, tendangnhap))
                             {
                                 f.ShowDialog();
                             }
@@ -90,6 +90,11 @@ namespace QuanLyCoSoVatChat
         }
 
         private void txtTendangnhap_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }

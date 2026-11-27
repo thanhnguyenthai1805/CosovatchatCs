@@ -59,5 +59,25 @@ namespace QuanLyCoSoVatChat.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap hinh_nen_may_tinh_bau_troi {
+            get {
+                object obj = ResourceManager.GetObject("hinh_nen_may_tinh_bau_troi", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Screenshot_2026_11_26_210323 {
+            get {
+                object obj = ResourceManager.GetObject("Screenshot 2026-11-26 210323", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

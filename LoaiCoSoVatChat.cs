@@ -13,19 +13,32 @@ namespace QuanLyCoSoVatChat
     {
         private string TaoMaLoai(SqlConnection conn)
         {
-            string sql = @"
-        SELECT ISNULL(
-            MAX(TRY_CONVERT(INT, SUBSTRING(MaLoai, 5, 10))),
-            0
-        ) + 1
-        FROM LoaiCoSoVatChat
-        WHERE MaLoai LIKE 'LOAI%'";
+            int so = 1;
 
-            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            while (true)
             {
-                int so = Convert.ToInt32(cmd.ExecuteScalar());
+                // Tạo mã theo định dạng LOAI001, LOAI002...
+                string ma = "LOAI" + so.ToString("D3");
 
-                return "LOAI" + so.ToString("D3");
+                string sql = @"
+            SELECT COUNT(*)
+            FROM LoaiCoSoVatChat
+            WHERE MaLoai = @MaLoai";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add("@MaLoai", SqlDbType.VarChar, 30).Value = ma;
+
+                    int tonTai = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    // Nếu mã chưa tồn tại thì sử dụng mã này
+                    if (tonTai == 0)
+                    {
+                        return ma;
+                    }
+                }
+
+                so++;
             }
         }
         private int trangthai = 0;
@@ -34,7 +47,7 @@ namespace QuanLyCoSoVatChat
         {
             InitializeComponent();
             loadLoai();
-            txtMaloai.ReadOnly=true;
+            txtMaloai.ReadOnly = true;
             onOff(true);
         }
 
@@ -308,6 +321,11 @@ namespace QuanLyCoSoVatChat
 
             trangthai = 0;
             onOff(true);
+        }
+
+        private void btnThoatdangnhap_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
